@@ -20,4 +20,10 @@ public class CommandLineParser {
         }
         return "Movie by title" + title + "already exists.";
     }
+
+    @ShellMethod(key = "exit", value = "Exit prompt")
+    public String exitPrompt() {
+        System.exit(1);
+        return "Exited";
+    }
 }
