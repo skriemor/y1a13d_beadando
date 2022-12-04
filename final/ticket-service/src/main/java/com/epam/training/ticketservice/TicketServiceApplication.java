@@ -15,14 +15,5 @@ public class TicketServiceApplication {
         SpringApplication.run(TicketServiceApplication.class, args);
     }
 
-    @Bean
-    public DataSource getDataSource()
-    {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.h2.Driver");
-        dataSourceBuilder.url("jdbc:h2:file:C:/temp/testDB");
-        dataSourceBuilder.username("sa");
-        dataSourceBuilder.password("");
-        return dataSourceBuilder.build();
-    }
+
 }

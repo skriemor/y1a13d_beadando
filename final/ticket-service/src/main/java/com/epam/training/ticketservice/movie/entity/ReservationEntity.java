@@ -2,27 +2,32 @@ package com.epam.training.ticketservice.movie.entity;
 
 
 
+import com.epam.training.ticketservice.movie.id.ReservationID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "reservation_entity")
+@IdClass(ReservationID.class)
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ReservationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reservation_id", nullable = false)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id", referencedColumnName = "movie_id", nullable = false)
-    private MovieEntity movie;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "movie_title")
+    private String movie;
+    @Id
+    @Column(name = "room_name")
+    private String room;
+    @Id
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    @Column(name = "start_date")
+    private LocalDateTime date;
 
 }

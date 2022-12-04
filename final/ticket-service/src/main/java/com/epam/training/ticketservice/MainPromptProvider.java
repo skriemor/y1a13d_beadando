@@ -12,7 +12,7 @@ public class MainPromptProvider implements PromptProvider {
     Logger log = Logger.getLogger("PROMPT LOGGER");
     @Override
     public AttributedString getPrompt() {
-        log.warning("Creating prompt");
+        //log.warning("Creating prompt");
         return new AttributedString("Ticket service>",
                 AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE));
     }
