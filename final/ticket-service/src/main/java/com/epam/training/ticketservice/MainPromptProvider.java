@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 @Component
 public class MainPromptProvider implements PromptProvider {
     Logger log = Logger.getLogger("PROMPT LOGGER");
+
     @Override
     public AttributedString getPrompt() {
         //log.warning("Creating prompt");

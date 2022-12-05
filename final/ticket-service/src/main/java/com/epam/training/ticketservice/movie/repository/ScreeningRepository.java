@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Repository
 public interface ScreeningRepository extends JpaRepository<ReservationEntity, String> {
     Boolean existsByMovieAndRoomAndDate(String movie, String room, LocalDateTime date);
+
     ReservationEntity findByMovieAndRoomAndDate(String movie, String room, LocalDateTime date);
+
     void deleteByMovieAndRoomAndDate(String movie, String room, LocalDateTime date);
 }

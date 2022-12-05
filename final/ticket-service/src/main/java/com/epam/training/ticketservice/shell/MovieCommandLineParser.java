@@ -16,47 +16,54 @@ import java.util.logging.Logger;
 public class MovieCommandLineParser {
     Logger logger = Logger.getLogger("SHELL LOG");
     @Autowired
-    MovieEntityRepository mRepo;
+    MovieEntityRepository movieRepository;
     @Autowired
     LoginStateService service;
 
     @ShellMethodAvailability("isAdmin")
     @ShellMethod(key = "create movie",value = "Add movie to list")
     public String addMovie(String title, String category, Integer length) {
-        if(!mRepo.existsById(title)) {
-            mRepo.save(new MovieEntity(title,category,length));
+        if (!movieRepository.existsById(title)) {
+            movieRepository.save(new MovieEntity(title,category,length));
             return "" + title + " is added to movies!";
         }
         return "Movie by title" + title + "already exists.";
     }
+
     public Availability isAdmin() {
-        return service.isAdmin()?Availability.available():Availability.unavailable("");
+        return service.isAdmin() ? Availability.available() : Availability.unavailable("");
     }
+
     @ShellMethod(key = "list movies",value = "List movies")
     public String listMovies() {
-       if(mRepo.count()==0) {
-           return"There are no movies at the moment";
-       }
-       StringBuffer stringBuffer = new StringBuffer();
-       mRepo.findAll().stream().forEach(
-               m -> stringBuffer.append(
-                       m.getTitle()+" (" +
-                       m.getCategory() + ", "
-                       + m.getLength() + " minutes)\n"
-               )
-       );
+        if (movieRepository.count() == 0) {
+            return "There are no movies at the moment";
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        movieRepository.findAll().stream().forEach(
+            m -> stringBuffer.append(
+            m.getTitle()
+            +
+            " ("
+            +
+            m.getCategory()
+            + ", "
+            + m.getLength()
+            + " minutes)\n"
+            )
+        );
 
-       return stringBuffer.substring(0,stringBuffer.length() - 1);
+        return stringBuffer.substring(0,stringBuffer.length() - 1);
     }
 
     @Transactional
     @ShellMethodAvailability("isAdmin")
     @ShellMethod(key = "update movie", value = "Update a movie")
     public String updateMovie(String movieName, String newGenre, Integer newLength) {
-        if (mRepo.existsById(movieName)) {
-            mRepo.deleteById(movieName);
+        if (movieRepository.existsById(movieName)) {
+            movieRepository.deleteById(movieName);
             MovieEntity movie = new MovieEntity(movieName, newGenre, newLength);
-            mRepo.save(movie);
+            movieRepository.save(movie);
             return "Updated movie " + movieName;
         }
         return "Did not update movie";
@@ -66,11 +73,13 @@ public class MovieCommandLineParser {
     @ShellMethodAvailability("isAdmin")
     @ShellMethod(key = "delete movie", value = "Delete a movie")
     public String deleteMovie(String movieName) {
-        if (mRepo.existsById(movieName)){
-            mRepo.deleteById(movieName);
+        if (movieRepository.existsById(movieName)) {
+            movieRepository.deleteById(movieName);
             return "Successfully deleted movie";
         }
-            return "Movie "+ movieName +" does not exist";
+        return "Movie "
+                + movieName
+                + " does not exist";
     }
 
 }

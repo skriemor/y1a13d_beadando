@@ -15,7 +15,9 @@ public class UserCommandLineParser {
     @ShellMethod(key = "sign in privileged",value = "Sign in")
     public String signIn(String userName, String userPassword) {
         UserEntity user = new UserEntity(userName,userPassword);
-        if (service.loginAdmin(user)) return "";
+        if (service.loginAdmin(user)) {
+            return "";
+        }
         return "Login failed due to incorrect credentials";
     }
 
@@ -30,9 +32,15 @@ public class UserCommandLineParser {
 
     @ShellMethod(key = "describe account",value = "Describe current account")
     public String describeAcc() {
-        return service.isSignedIn()?"Signed in with " +
-                service.getLoggedInUserType() +
-                " account \'" + service.getSignedInUserName() + "\'"
-                :"You are not signed in";
+        return service.isSignedIn() ? "Signed in with "
+                +
+                service.getLoggedInUserType()
+                +
+                " account \'"
+                +
+                service.getSignedInUserName()
+                +
+                "\'"
+                : "You are not signed in";
     }
 }

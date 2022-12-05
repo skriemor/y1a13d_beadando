@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "users")
 public class UserEntity {
-        @Id
-        private String userName;
-        private String password;
+    @Id
+    private String userName;
+    private String password;
 }
