@@ -13,6 +13,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.Entity;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -39,7 +40,22 @@ public class MovieEntity {
         this.length = length;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MovieEntity that = (MovieEntity) o;
+        return Objects.equals(title, that.title)
+                && Objects.equals(category, that.category)
+                && Objects.equals(length, that.length);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, category, length);
+    }
 }

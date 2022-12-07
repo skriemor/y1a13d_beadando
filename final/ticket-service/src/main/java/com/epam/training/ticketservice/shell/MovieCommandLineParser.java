@@ -23,6 +23,7 @@ public class MovieCommandLineParser {
     @ShellMethodAvailability("isAdmin")
     @ShellMethod(key = "create movie",value = "Add movie to list")
     public String addMovie(String title, String category, Integer length) {
+        logger.warning(title + category + String.valueOf(length));
         if (!movieRepository.existsById(title)) {
             movieRepository.save(new MovieEntity(title,category,length));
             return "" + title + " is added to movies!";

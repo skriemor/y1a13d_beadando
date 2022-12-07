@@ -11,6 +11,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.Entity;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -34,5 +35,24 @@ public class RoomEntity {
         this.colCount = cols;
         this.rowCount = rows;
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RoomEntity room = (RoomEntity) o;
+        return Objects.equals(name, room.name)
+                && Objects.equals(rowCount, room.rowCount)
+                && Objects.equals(colCount, room.colCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, rowCount, colCount);
     }
 }

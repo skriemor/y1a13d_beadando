@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Entity;
 import javax.persistence.IdClass;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Entity
@@ -33,4 +34,22 @@ public class ReservationEntity {
     @Column(name = "start_date")
     private LocalDateTime date;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ReservationEntity that = (ReservationEntity) o;
+        return movie.equals(that.movie)
+                && room.equals(that.room)
+                && date.equals(that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(movie, room, date);
+    }
 }

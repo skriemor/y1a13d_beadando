@@ -121,7 +121,7 @@ public class ScreeningCommandLineParser {
     }
 
 
-    private String canAddScreening(ReservationEntity reservation) {
+    public String canAddScreening(ReservationEntity reservation) {
         boolean duringbreak = false;
         boolean duringscreening = false;
         List<ReservationEntity> resevations = new ArrayList<>(resRepo.findAll());
