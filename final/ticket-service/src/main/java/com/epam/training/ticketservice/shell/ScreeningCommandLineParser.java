@@ -4,8 +4,8 @@ import com.epam.training.ticketservice.movie.entity.MovieEntity;
 import com.epam.training.ticketservice.movie.entity.ReservationEntity;
 import com.epam.training.ticketservice.movie.entity.RoomEntity;
 import com.epam.training.ticketservice.movie.repository.MovieEntityRepository;
-import com.epam.training.ticketservice.movie.repository.ScreeningRepository;
 import com.epam.training.ticketservice.movie.repository.RoomEntityRepository;
+import com.epam.training.ticketservice.movie.repository.ScreeningRepository;
 import com.epam.training.ticketservice.user.login.LoginStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @ShellComponent
@@ -33,7 +35,7 @@ public class ScreeningCommandLineParser {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @ShellMethodAvailability("isAdmin")
-    @ShellMethod(key = "create screening",value = "Create a screening")
+    @ShellMethod(key = "create screening", value = "Create a screening")
     public String addScreening(String movieTitle, String roomName, String startDate) {
         if (!movieRepository.existsById(movieTitle)) {
             return "Movie not found";
@@ -41,11 +43,11 @@ public class ScreeningCommandLineParser {
         if (!roomRepo.existsById(roomName)) {
             return "Room not found";
         }
-        LocalDateTime time = LocalDateTime.parse(startDate,formatter);
+        LocalDateTime time = LocalDateTime.parse(startDate, formatter);
         if (time == null) {
             return "Time parse exception";
         }
-        if (resRepo.existsByMovieAndRoomAndDate(movieTitle,roomName,time)) {
+        if (resRepo.existsByMovieAndRoomAndDate(movieTitle, roomName, time)) {
             return "Screening already exists";
         }
         ReservationEntity res = new ReservationEntity(movieTitle, roomName, time);
@@ -67,9 +69,9 @@ public class ScreeningCommandLineParser {
     @Transactional
     @ShellMethod(key = "delete screening", value = "Delete a screening")
     public String deleteScreening(String title, String name, String startDate) {
-        LocalDateTime time = LocalDateTime.parse(startDate,formatter);
-        if (resRepo.existsByMovieAndRoomAndDate(title,name,time)) {
-            resRepo.deleteByMovieAndRoomAndDate(title,name,time);
+        LocalDateTime time = LocalDateTime.parse(startDate, formatter);
+        if (resRepo.existsByMovieAndRoomAndDate(title, name, time)) {
+            resRepo.deleteByMovieAndRoomAndDate(title, name, time);
             return "Successfully deleted screening";
         }
         return "Screening with movie name " + name + " does not exist";
@@ -81,38 +83,30 @@ public class ScreeningCommandLineParser {
     }
 
 
-
-    @ShellMethod(key = "list screenings",value = "List screenings")
+    @ShellMethod(key = "list screenings", value = "List screenings")
     public String listScreenings() {
         if (resRepo.count() == 0) {
             return "There are no screenings";
         }
         StringBuffer stringBuffer = new StringBuffer();
-        resRepo.findAll().stream().forEach(
+        var reverse = resRepo.findAll();
+        reverse.sort((a, b) -> b.getMovie().compareTo(a.getMovie()));
+
+        reverse.stream().forEach(
             m -> {
                 MovieEntity movie = movieRepository.findById(m.getMovie()).get();
                 RoomEntity room = roomRepo.findById(m.getRoom()).get();
-
                 stringBuffer.append(
-                    movie.getTitle()
-                            +
-                            " ("
-                            +
-                            movie.getCategory()
-                            +
-                            ", "
-                            +
-                            movie.getLength()
-                            +
-                            " minutes), screened in room "
-                            +
-                            room.getName()
-                            +
-                            ", at "
-                            +
-                            m.getDate().format(formatter)
-                            +
-                            "\n"
+                        movie.getTitle()
+                            + " ("
+                            + movie.getCategory()
+                            + ", "
+                            + movie.getLength()
+                            + " minutes), screened in room "
+                            + room.getName()
+                            + ", at "
+                            + m.getDate().format(formatter)
+                            + "\n"
                 );
             }
         );
